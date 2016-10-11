@@ -1,13 +1,16 @@
 #!/bin/bash
 
+# Install soft
 yum install -y gmp-devel xl2tpd module-init-tools gcc openssl-devel
 
+# Delete old files
 rm -rf /tmp/strongswan* > /dev/null 2>&1
 
+# Download StrongSwan
 wget https://download.strongswan.org/strongswan-5.5.0.tar.gz -O /tmp/strongswan-5.5.0.tar.gz
 
+# Install StrongSwan
 (cd /tmp && tar -zxvf strongswan-5.5.0.tar.gz )
-
 (cd /tmp/strongswan-5.5.0 && \
 ./configure --prefix=/usr --sysconfdir=/etc \
 		--enable-eap-radius \
@@ -40,3 +43,6 @@ cp vpn_deluser /usr/local/bin/vpn_deluser
 cp vpn_setpsk /usr/local/bin/vpn_setpsk
 cp vpn_unsetpsk /usr/local/bin/vpn_unsetpsk
 cp vpn_apply /usr/local/bin/vpn_apply
+
+# Delete tmp files
+rm -rf /tmp/strongswan* > /dev/null 2>&1
