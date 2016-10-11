@@ -28,11 +28,11 @@ elif [ "$1" == "init" ]; then
 
   shellName=`ps | grep $$ | awk '{print $4}'`
 
-  if [ "$shellName" == "zsh" ]; then
+  if [ "$shellName" == "zsh" ] || [ "$SHELL" == "/usr/bin/zsh" ]; then
     read "VPN_USER?Please input VPN_USER: "
     read "VPN_PASSWORD?Please input VPN_PASSWORD: "
     read "VPN_PSK?Please input VPN_PSK: "
-  elif [ "$shellName" == "bash" ]; then
+  elif [ "$shellName" == "bash" ] || [ "$SHELL" == "/bin/bash" ]; then
     read -p "Please input VPN_USER: " VPN_USER
     read -p "Please input VPN_PASSWORD: " VPN_PASSWORD
     read -p "Please input VPN_PSK: " VPN_PSK
