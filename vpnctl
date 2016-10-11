@@ -1,30 +1,30 @@
 #!/bin/bash
 
-vpm_cmd=$1
+vpn_cmd=$1
 
-if [ "$1" == "" ] || ([ "$1" != "satrt" ] && [ "$1" != "stop" ] && [ "$1" != "restart" ] && [ "$1" != "init" ]); then
-  echo -e "\033[31mError: Unsupported options $1!\033[0m"
+if [ "$vpn_cmd" == "" ] || ([ "$vpn_cmd" != "satrt" ] && [ "$vpn_cmd" != "stop" ] && [ "$vpn_cmd" != "restart" ] && [ "$vpn_cmd" != "init" ]); then
+  echo -e "\033[31mError: Unsupported options $vpn_cmd!\033[0m"
   echo -e "\033[32mUsing the examples: vpnctl start | stop | restart | init\033[0m"
 fi
 
 
-if [ "$1" == "start" ]; then
+if [ "$vpn_cmd" == "start" ]; then
   echo -e "\033[32mstarting xl2tpd......\033[0m"
   /usr/sbin/xl2tpd -c /etc/xl2tpd/xl2tpd.conf
   echo -e "\033[32mstarting ipsec......\033[0m"
   ipsec start > /dev/null 2>&1
-elif [ "$1" == "stop" ]; then
+elif [ "$vpn_cmd" == "stop" ]; then
   echo -e "\033[33mstopping xl2tpd......\033[0m"
   kill `pgrep xl2tpd`
   echo -e "\033[33mstopping ipsec......\033[0m"
   ipsec stop > /dev/null 2>&1
-elif [ "$1" == "restart" ]; then
+elif [ "$vpn_cmd" == "restart" ]; then
   echo -e "\033[32mrestarting xl2tpd......\033[0m"
   kill `pgrep xl2tpd`
   /usr/sbin/xl2tpd -c /etc/xl2tpd/xl2tpd.conf
   echo -e "\033[32mrestarting ipsec......\033[0m"
   ipsec restart > /dev/null 2>&1
-elif [ "$1" == "init" ]; then
+elif [ "$vpn_cmd" == "init" ]; then
 
   shellName=`ps | grep $$ | awk '{print $4}'`
 
