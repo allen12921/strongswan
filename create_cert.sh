@@ -2,7 +2,7 @@
 
 vpn_host=$1
 
-rm -rf cert > /dev/null 2>&
+rm -rf cert > /dev/null 2>&1
 mkdir cert && cd cert
 
 # create CA certificate
