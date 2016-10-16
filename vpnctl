@@ -2,7 +2,7 @@
 
 vpn_cmd=$1
 
-if [ "$vpn_cmd" == "" ] || ([ "$vpn_cmd" != "satrt" ] && [ "$vpn_cmd" != "stop" ] && [ "$vpn_cmd" != "restart" ] && [ "$vpn_cmd" != "init" ]); then
+if [ "$vpn_cmd" == "" ] || ([ "$vpn_cmd" != "start" ] && [ "$vpn_cmd" != "stop" ] && [ "$vpn_cmd" != "restart" ] && [ "$vpn_cmd" != "init" ]); then
   echo -e "\033[31mError: Unsupported options $vpn_cmd!\033[0m"
   echo -e "\033[32mUsing the examples: vpnctl start | stop | restart | init\033[0m"
 fi
