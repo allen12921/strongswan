@@ -38,6 +38,7 @@ rm -f /etc/ipsec.d/private/server.key.pem > /dev/null 2>&1
 rm -f /etc/ipsec.d/certs/client.cert.pem > /dev/null 2>&1
 rm -f /etc/ipsec.d/private/client.key.pem > /dev/null 2>&1
 
+echo -e "\033[32minstall certificate...\033[0m"
 cp -r ca.cert.pem /etc/ipsec.d/cacerts/
 cp -r server.cert.pem /etc/ipsec.d/certs/
 cp -r server.key.pem /etc/ipsec.d/private/
