@@ -44,3 +44,5 @@ cp -r server.cert.pem /etc/ipsec.d/certs/
 cp -r server.key.pem /etc/ipsec.d/private/
 cp -r client.cert.pem /etc/ipsec.d/certs/
 cp -r client.key.pem /etc/ipsec.d/private/
+
+echo ": RSA server.key.pem" >> /etc/ipsec.secrets
