@@ -9,7 +9,7 @@ fi
 
 vpn_unsetpsk
 
-touch /etc/ipsec.d/ipsec.secrets
-cat >> /etc/ipsec.d/ipsec.secrets <<EOF
+touch /etc/ipsec.secrets
+cat >> /etc/ipsec.secrets <<EOF
 : PSK "${psk}"
 EOF
