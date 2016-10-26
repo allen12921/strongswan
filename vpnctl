@@ -28,7 +28,7 @@ case "$vpn_cmd" in
   "init" )
 
     shellName=`ps | grep $$ | awk '{print $4}'`
-    if [ "$shellName" == "zsh" ] || [ "$SHELL" == "/usr/bin/zsh" ] || [ "$SHELL" == "/bin/zsh" ]; then
+    if [ "$shellName" == "zsh" ] || [ "$SHELL" == "/usr/bin/zsh" ]; then
       read "VPN_USER?Please input VPN_USER: "
       read "VPN_PASSWORD?Please input VPN_PASSWORD: "
       read "VPN_PSK?Please input VPN_PSK: "
