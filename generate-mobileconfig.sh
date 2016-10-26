@@ -3,7 +3,7 @@
 # In normal cases, you will only need to pass the HOST of your server.
 
 shellName=`ps | grep $$ | awk '{print $4}'`
-if [ "$shellName" == "zsh" ]||[ "$SHELL" == "/usr/bin/zsh" ]||[ "$SHELL" == "/bin/zsh" ]; then
+if [ "$shellName" == "zsh" ] || [ "$SHELL" == "/usr/bin/zsh" ]; then
   read "HOST?Please input HOST: "
 else
   read -p "Please input HOST: " HOST
