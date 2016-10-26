@@ -45,7 +45,7 @@ case "$vpn_cmd" in
     	echo 0 > $each/send_redirects
     done
 
-    if [ "$VPN_PASSWORD"=="password" ] || [ "$VPN_PASSWORD"=="" ]; then
+    if [ "$VPN_PASSWORD" == "password" ] || [ "$VPN_PASSWORD" == "" ]; then
     	# Generate a random password
     	P1=`cat /dev/urandom | tr -cd abcdefghjkmnpqrstuvwxyzABCDEFGHJKLMNPQRSTUVWXYZ23456789 | head -c 3`
     	P2=`cat /dev/urandom | tr -cd abcdefghjkmnpqrstuvwxyzABCDEFGHJKLMNPQRSTUVWXYZ23456789 | head -c 3`
@@ -54,7 +54,7 @@ case "$vpn_cmd" in
     	echo "No VPN_PASSWORD set! Generated a random password: $VPN_PASSWORD"
     fi
 
-    if [ "$VPN_PSK"=="password" ] || [ "$VPN_PSK"=="" ]; then
+    if [ "$VPN_PSK" == "password" ] || [ "$VPN_PSK" == "" ]; then
     	# Generate a random password
     	P1=`cat /dev/urandom | tr -cd abcdefghjkmnpqrstuvwxyzABCDEFGHJKLMNPQRSTUVWXYZ23456789 | head -c 3`
     	P2=`cat /dev/urandom | tr -cd abcdefghjkmnpqrstuvwxyzABCDEFGHJKLMNPQRSTUVWXYZ23456789 | head -c 3`
@@ -63,7 +63,7 @@ case "$vpn_cmd" in
     	echo "No VPN_PSK set! Generated a random PSK key: $VPN_PSK"
     fi
 
-    if [ "$VPN_PASSWORD"=="$VPN_PSK" ]; then
+    if [ "$VPN_PASSWORD" == "$VPN_PSK" ]; then
     	echo "It is not recommended to use the same secret as password and PSK key!"
     fi
 
