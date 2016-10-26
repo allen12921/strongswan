@@ -26,10 +26,17 @@ case "$vpn_cmd" in
     ipsec restart > /dev/null 2>&1
     ;;
   "init" )
-    /usr/bin/read -p "Please input VPN_USER: " VPN_USER
-    /usr/bin/read -p "Please input VPN_PASSWORD: " VPN_PASSWORD
-    /usr/bin/read -p "Please input VPN_PSK: " VPN_PSK
 
+    shellName=`ps | grep $$ | awk '{print $4}'`
+    if [ "$shellName" == "zsh" ] || [ "$SHELL" == "/usr/bin/zsh" ] || [ "$SHELL" == "/bin/zsh" ]; then
+      read "VPN_USER?Please input VPN_USER: "
+      read "VPN_PASSWORD?Please input VPN_PASSWORD: "
+      read "VPN_PSK?Please input VPN_PSK: "
+    else
+      read -p "Please input VPN_USER: " VPN_USER
+      read -p "Please input VPN_PASSWORD: " VPN_PASSWORD
+      read -p "Please input VPN_PSK: " VPN_PSK
+    fi
     sysctl -w net.ipv4.conf.all.rp_filter=2
     iptables --table nat --append POSTROUTING --jump MASQUERADE
     echo 1 > /proc/sys/net/ipv4/ip_forward
