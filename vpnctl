@@ -77,6 +77,7 @@ EOF
 # or configuration of other implementations, can be extracted conveniently
 # with "ipsec showhostkey".
 
+: RSA server.key.pem
 : PSK "$VPN_PSK"
 
 $VPN_USER : EAP "$VPN_PASSWORD"

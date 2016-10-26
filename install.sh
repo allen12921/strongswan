@@ -42,7 +42,6 @@ cp vpn_adduser /usr/local/bin/vpn_adduser
 cp vpn_deluser /usr/local/bin/vpn_deluser
 cp vpn_setpsk /usr/local/bin/vpn_setpsk
 cp vpn_unsetpsk /usr/local/bin/vpn_unsetpsk
-cp vpn_apply /usr/local/bin/vpn_apply
 
 # Delete tmp files
 rm -rf /tmp/strongswan* > /dev/null 2>&1
