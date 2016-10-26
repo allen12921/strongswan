@@ -1,42 +1,37 @@
 #!/bin/bash
 
+# This command is used to initialize, start, stop, and restart strongwan's vpn service;
+# After the first successful installation of strongswan vpnctl init command.
+
 vpn_cmd=$1
 
-if [ "$vpn_cmd" == "" ] || ([ "$vpn_cmd" != "satrt" ] && [ "$vpn_cmd" != "stop" ] && [ "$vpn_cmd" != "restart" ] && [ "$vpn_cmd" != "init" ]); then
+if [ "$vpn_cmd"=="" ] || ([ "$vpn_cmd" != "satrt" ] && [ "$vpn_cmd" != "stop" ] && [ "$vpn_cmd" != "restart" ] && [ "$vpn_cmd" != "init" ]); then
   echo -e "\033[31mError: Unsupported options $vpn_cmd!\033[0m"
   echo -e "\033[32mUsing the examples: vpnctl start | stop | restart | init\033[0m"
 fi
 
 
-if [ "$vpn_cmd" == "start" ]; then
+if [ "$vpn_cmd"=="start" ]; then
   echo -e "\033[32mstarting xl2tpd......\033[0m"
   /usr/sbin/xl2tpd -c /etc/xl2tpd/xl2tpd.conf
   echo -e "\033[32mstarting ipsec......\033[0m"
   ipsec start > /dev/null 2>&1
-elif [ "$vpn_cmd" == "stop" ]; then
+elif [ "$vpn_cmd"=="stop" ]; then
   echo -e "\033[33mstopping xl2tpd......\033[0m"
   kill `pgrep xl2tpd`
   echo -e "\033[33mstopping ipsec......\033[0m"
   ipsec stop > /dev/null 2>&1
-elif [ "$vpn_cmd" == "restart" ]; then
+elif [ "$vpn_cmd"=="restart" ]; then
   echo -e "\033[32mrestarting xl2tpd......\033[0m"
   kill `pgrep xl2tpd`
   /usr/sbin/xl2tpd -c /etc/xl2tpd/xl2tpd.conf
   echo -e "\033[32mrestarting ipsec......\033[0m"
   ipsec restart > /dev/null 2>&1
-elif [ "$vpn_cmd" == "init" ]; then
+elif [ "$vpn_cmd"=="init" ]; then
 
-  shellName=`ps | grep $$ | awk '{print $4}'`
-
-  if [ "$shellName" == "zsh" ] || [ "$SHELL" == "/usr/bin/zsh" ]; then
-    read "VPN_USER?Please input VPN_USER: "
-    read "VPN_PASSWORD?Please input VPN_PASSWORD: "
-    read "VPN_PSK?Please input VPN_PSK: "
-  elif [ "$shellName" == "bash" ] || [ "$SHELL" == "/bin/bash" ]; then
-    read -p "Please input VPN_USER: " VPN_USER
-    read -p "Please input VPN_PASSWORD: " VPN_PASSWORD
-    read -p "Please input VPN_PSK: " VPN_PSK
-  fi
+  /usr/bin/read -p "Please input VPN_USER: " VPN_USER
+  /usr/bin/read -p "Please input VPN_PASSWORD: " VPN_PASSWORD
+  /usr/bin/read -p "Please input VPN_PSK: " VPN_PSK
 
   sysctl -w net.ipv4.conf.all.rp_filter=2
   iptables --table nat --append POSTROUTING --jump MASQUERADE
@@ -46,7 +41,7 @@ elif [ "$vpn_cmd" == "init" ]; then
   	echo 0 > $each/send_redirects
   done
 
-  if [ "$VPN_PASSWORD" = "password" ] || [ "$VPN_PASSWORD" = "" ]; then
+  if [ "$VPN_PASSWORD"=="password" ] || [ "$VPN_PASSWORD"=="" ]; then
   	# Generate a random password
   	P1=`cat /dev/urandom | tr -cd abcdefghjkmnpqrstuvwxyzABCDEFGHJKLMNPQRSTUVWXYZ23456789 | head -c 3`
   	P2=`cat /dev/urandom | tr -cd abcdefghjkmnpqrstuvwxyzABCDEFGHJKLMNPQRSTUVWXYZ23456789 | head -c 3`
@@ -55,7 +50,7 @@ elif [ "$vpn_cmd" == "init" ]; then
   	echo "No VPN_PASSWORD set! Generated a random password: $VPN_PASSWORD"
   fi
 
-  if [ "$VPN_PSK" = "password" ] || [ "$VPN_PSK" = "" ]; then
+  if [ "$VPN_PSK"=="password" ] || [ "$VPN_PSK"=="" ]; then
   	# Generate a random password
   	P1=`cat /dev/urandom | tr -cd abcdefghjkmnpqrstuvwxyzABCDEFGHJKLMNPQRSTUVWXYZ23456789 | head -c 3`
   	P2=`cat /dev/urandom | tr -cd abcdefghjkmnpqrstuvwxyzABCDEFGHJKLMNPQRSTUVWXYZ23456789 | head -c 3`
@@ -64,7 +59,7 @@ elif [ "$vpn_cmd" == "init" ]; then
   	echo "No VPN_PSK set! Generated a random PSK key: $VPN_PSK"
   fi
 
-  if [ "$VPN_PASSWORD" = "$VPN_PSK" ]; then
+  if [ "$VPN_PASSWORD"=="$VPN_PSK" ]; then
   	echo "It is not recommended to use the same secret as password and PSK key!"
   fi
 
@@ -92,5 +87,4 @@ EOF
   mkdir -p /var/run/xl2tpd
   /usr/sbin/xl2tpd -c /etc/xl2tpd/xl2tpd.conf
   ipsec start
-
 fi
