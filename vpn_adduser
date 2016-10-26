@@ -10,11 +10,11 @@ fi
 
 vpn_deluser ${vpn_user}
 
-cat >> /etc/ipsec.d/l2tp-secrets <<EOF
+cat >> /etc/l2tp-secrets <<EOF
 "${vpn_user}" "*" "${vpn_password}" "*"
 EOF
 
-cat >> /etc/ipsec.d/ipsec.secrets <<EOF
+cat >> /etc/ipsec.secrets <<EOF
 ${vpn_user} : EAP "${vpn_password}"
 ${vpn_user} : XAUTH "${vpn_password}"
 EOF
