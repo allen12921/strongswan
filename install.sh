@@ -3,7 +3,8 @@
 VERSION='5.5.1'
 CONFIGPATH='/etc/strongswan'
 INSTALLDIR='/usr/local/strongswan'
-INTERFACE='eth0'
+INTERFACE=$1
+INTERFACE=${INTERFACE:-eth0}
 
 function install() {
 	_preinstall
