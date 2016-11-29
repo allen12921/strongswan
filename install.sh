@@ -28,7 +28,7 @@ function _preinstall() {
 
 function _install() {
 	(cd /tmp/strongswan-$VERSION && \
-	./configure --prefix=$CONFIGPATH \
+	./configure --prefix=$INSTALLDIR \
 	            --sysconfdir=$CONFIGPATH \
 	            --enable-eap-identity \
 							--enable-eap-md5 \
