@@ -1,9 +1,11 @@
 #!/bin/bash
 
-VERSION=5.5.1
+VERSION='5.5.1'
+CONFIGPATH='/etc/strongswan'
+INSTALLDIR='/usr/local/strongswan'
 
 # Install soft
-yum install -y gmp-devel xl2tpd module-init-tools gcc openssl-devel
+yum install -y gmp-devel pam-devel module-init-tools gcc make openssl-devel wget
 
 # Delete old files
 rm -rf /tmp/strongswan* > /dev/null 2>&1
@@ -14,29 +16,32 @@ wget https://download.strongswan.org/strongswan-$VERSION.tar.gz -O /tmp/strongsw
 # Install StrongSwan
 (cd /tmp && tar -zxvf strongswan-$VERSION.tar.gz )
 (cd /tmp/strongswan-$VERSION && \
-./configure --prefix=/usr --sysconfdir=/etc \
-		--enable-eap-radius \
-		--enable-eap-mschapv2 \
-		--enable-eap-identity \
-		--enable-eap-md5 \
-		--enable-eap-mschapv2 \
-		--enable-eap-tls \
-		--enable-eap-ttls \
-		--enable-eap-peap \
-		--enable-eap-tnc \
-		--enable-eap-dynamic \
-		--enable-xauth-eap \
-		--enable-openssl \
-	&& make -j \
-	&& make install)
+./configure --prefix=$CONFIGPATH \
+            --sysconfdir=$CONFIGPATH \
+            --enable-eap-identity \
+						--enable-eap-md5 \
+            --enable-eap-tnc \
+						--enable-eap-dynamic \
+						--enable-eap-radius \
+						--enable-xauth-eap \
+            --enable-xauth-pam \
+						--enable-dhcp \
+						--enable-openssl \
+						--enable-addrblock \
+						--enable-unity \
+            --enable-certexpire \
+						--enable-radattr \
+						--enable-swanctl \
+						--enable-openssl \
+						--disable-gmp \
+&& make -j \
+&& make install)
+
+mkdir -p /etc/{strongswan,xl2tpd,ppp}
 
 # Strongswan Configuration
-cp ipsec.conf /etc/ipsec.conf
-cp strongswan.conf /etc/strongswan.conf
-
-# XL2TPD Configuration
-cp xl2tpd.conf /etc/xl2tpd/xl2tpd.conf
-cp options.xl2tpd /etc/ppp/options.xl2tpd
+cp ipsec.conf $CONFIGPATH/ipsec.conf
+cp strongswan.conf $CONFIGPATH/strongswan.conf
 
 # VPN Bin
 cp vpnctl /usr/local/bin/vpnctl
