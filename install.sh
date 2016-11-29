@@ -1,5 +1,7 @@
 #!/bin/bash
 
+VERSION=5.5.1
+
 # Install soft
 yum install -y gmp-devel xl2tpd module-init-tools gcc openssl-devel
 
@@ -7,11 +9,11 @@ yum install -y gmp-devel xl2tpd module-init-tools gcc openssl-devel
 rm -rf /tmp/strongswan* > /dev/null 2>&1
 
 # Download StrongSwan
-wget https://download.strongswan.org/strongswan-5.5.0.tar.gz -O /tmp/strongswan-5.5.0.tar.gz
+wget https://download.strongswan.org/strongswan-$VERSION.tar.gz -O /tmp/strongswan-$VERSION.tar.gz
 
 # Install StrongSwan
-(cd /tmp && tar -zxvf strongswan-5.5.0.tar.gz )
-(cd /tmp/strongswan-5.5.0 && \
+(cd /tmp && tar -zxvf strongswan-$VERSION.tar.gz )
+(cd /tmp/strongswan-$VERSION && \
 ./configure --prefix=/usr --sysconfdir=/etc \
 		--enable-eap-radius \
 		--enable-eap-mschapv2 \
