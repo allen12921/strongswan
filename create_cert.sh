@@ -4,11 +4,12 @@
 # including p12 certificates for mobile devices.
 # Example: ./create_cert.sh vpn.mritd.me [eth0]
 
-vpn_host=$1
+VPNHOST=$1
 NIC=$2
+CONFIGPATH='$CONFIGPATH/strongswan'
 
-if [ "$vpn_host"!="" ]; then
-  VPN_ADDHOST_CMD="--san $vpn_host"
+if [ "$VPNHOST"!="" ]; then
+  VPN_ADDHOST_CMD="--san $VPNHOST"
 fi
 
 rm -rf cert > /dev/null 2>&1
@@ -23,7 +24,7 @@ ipsec pki --self --in ca.key.pem --dn "C=CN, O=StrongSwan, CN=StrongSwan CA" --c
 echo -e "\033[32mCreate server certificate...\033[0m"
 ipsec pki --gen --outform pem > server.key.pem
 ipsec pki --pub --in server.key.pem | ipsec pki --issue --cacert ca.cert.pem \
-  --cakey ca.key.pem --dn "C=CN, O=StrongSwan, CN=$vpn_host" \
+  --cakey ca.key.pem --dn "C=CN, O=StrongSwan, CN=$VPNHOST" \
   $VPN_ADDHOST_CMD --san="`ifconfig $NIC|sed -n 2p|awk  '{ print $2 }'|tr -d 'addr:'`" --flag serverAuth --flag ikeIntermediate \
   --outform pem > server.cert.pem
 
@@ -41,15 +42,15 @@ openssl pkcs12 -export -inkey client.key.pem -in client.cert.pem -name "Client" 
 
 # install certificate
 echo -e "\033[33mremove old certificate...\033[0m"
-rm -f /etc/ipsec.d/cacerts/ca.cert.pem > /dev/null 2>&1
-rm -f /etc/ipsec.d/certs/server.cert.pem > /dev/null 2>&1
-rm -f /etc/ipsec.d/private/server.key.pem > /dev/null 2>&1
-rm -f /etc/ipsec.d/certs/client.cert.pem > /dev/null 2>&1
-rm -f /etc/ipsec.d/private/client.key.pem > /dev/null 2>&1
+rm -f $CONFIGPATH/ipsec.d/cacerts/ca.cert.pem > /dev/null 2>&1
+rm -f $CONFIGPATH/ipsec.d/certs/server.cert.pem > /dev/null 2>&1
+rm -f $CONFIGPATH/ipsec.d/private/server.key.pem > /dev/null 2>&1
+rm -f $CONFIGPATH/ipsec.d/certs/client.cert.pem > /dev/null 2>&1
+rm -f $CONFIGPATH/ipsec.d/private/client.key.pem > /dev/null 2>&1
 
 echo -e "\033[32mInstall certificate...\033[0m"
-cp -r ca.cert.pem /etc/ipsec.d/cacerts/
-cp -r server.cert.pem /etc/ipsec.d/certs/
-cp -r server.key.pem /etc/ipsec.d/private/
-cp -r client.cert.pem /etc/ipsec.d/certs/
-cp -r client.key.pem /etc/ipsec.d/private/
+cp -r ca.cert.pem $CONFIGPATH/ipsec.d/cacerts/
+cp -r server.cert.pem $CONFIGPATH/ipsec.d/certs/
+cp -r server.key.pem $CONFIGPATH/ipsec.d/private/
+cp -r client.cert.pem $CONFIGPATH/ipsec.d/certs/
+cp -r client.key.pem $CONFIGPATH/ipsec.d/private/
