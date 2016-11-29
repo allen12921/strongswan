@@ -8,7 +8,7 @@ INTERFACE=${INTERFACE:-eth0}
 
 function install() {
 	_preinstall
-	install
+	_install
 	_postinstall
 	config_iptables
 	config_kernel
