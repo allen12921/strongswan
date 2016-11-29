@@ -24,7 +24,7 @@ fi
 : ${CONN_UUID=$(uuidgen)}
 : ${CONN_HOST=${HOST}}
 : ${CONN_REMOTE_IDENTIFIER=${HOST}}
-CONN_SHARED_SECRET=$(grep "PSK" /etc/ipsec.secrets | sed 's/.*"\(.*\)"/\1/g')
+CONN_SHARED_SECRET=$(grep "PSK" /etc/strongswan/ipsec.secrets | sed 's/.*"\(.*\)"/\1/g')
 cat <<EOF
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <!-- Read more: https://wiki.strongswan.org/projects/strongswan/wiki/AppleIKEv2Profile -->
