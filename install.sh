@@ -1,10 +1,11 @@
 #!/bin/bash
 
-VERSION='5.5.1'
-CONFIGPATH='/etc/strongswan'
-INSTALLDIR='/usr/local/strongswan'
+VERSION="5.5.1"
+INSTALLDIR="/usr/local/strongswan"
+CONFIGPATH="$INSTALLDIR/etc"
 INTERFACE=$1
 INTERFACE=${INTERFACE:-eth0}
+IPADDRESS=`ifconfig $INTERFACE|sed -n 2p|awk  '{ print $2 }'|tr -d 'addr:'`
 
 function install() {
     _preinstall
@@ -28,7 +29,9 @@ function _preinstall() {
 
 function _install() {
     (cd /tmp/strongswan-$VERSION && \
-    ./configure --enable-eap-identity \
+    ./configure --prefix=$INSTALLDIR \
+                --sysconfdir=$CONFIGPATH \
+                --enable-eap-identity \
                 --enable-eap-md5 \
                 --enable-eap-mschapv2 \
                 --enable-eap-tls \
@@ -86,9 +89,7 @@ function config_kernel() {
 
 function config_strongswan() {
     # Strongswan Configuration
-    mkdir -p $CONFIGPATH
-    cp ipsec.conf $CONFIGPATH/ipsec.conf
-    cp strongswan.conf $CONFIGPATH/strongswan.conf
+    mkdir -p $CONFIGPATH 
 
     # Generate a random password
     P1=`cat /dev/urandom | tr -cd abcdefghjkmnpqrstuvwxyzABCDEFGHJKLMNPQRSTUVWXYZ23456789 | head -c 3`
@@ -101,6 +102,104 @@ function config_strongswan() {
     P2=`cat /dev/urandom | tr -cd abcdefghjkmnpqrstuvwxyzABCDEFGHJKLMNPQRSTUVWXYZ23456789 | head -c 3`
     P3=`cat /dev/urandom | tr -cd abcdefghjkmnpqrstuvwxyzABCDEFGHJKLMNPQRSTUVWXYZ23456789 | head -c 3`
     VPN_PSK="$P1$P2$P3"
+
+    cat > $CONFIGPATH/ipsec.conf <<EOF
+config setup
+    uniqueids=never
+
+conn iOS_cert
+    keyexchange=ikev1
+    fragmentation=yes
+    left=%defaultroute
+    leftauth=pubkey
+    leftsubnet=0.0.0.0/0
+    leftcert=server.cert.pem
+    right=%any
+    rightauth=pubkey
+    rightauth2=xauth
+    rightsourceip=10.31.2.0/24
+    rightcert=client.cert.pem
+    auto=add
+
+conn android_xauth_psk
+    keyexchange=ikev1
+    left=%defaultroute
+    leftauth=psk
+    leftsubnet=0.0.0.0/0
+    right=%any
+    rightauth=psk
+    rightauth2=xauth
+    rightsourceip=10.31.2.0/24
+    auto=add
+
+conn networkmanager-strongswan
+    keyexchange=ikev2
+    left=%defaultroute
+    leftauth=pubkey
+    leftsubnet=0.0.0.0/0
+    leftcert=server.cert.pem
+    right=%any
+    rightauth=pubkey
+    rightsourceip=10.31.2.0/24
+    rightcert=client.cert.pem
+    auto=add
+
+conn ios_ikev2
+    keyexchange=ikev2
+    ike=aes256-sha256-modp2048,3des-sha1-modp2048,aes256-sha1-modp2048!
+    esp=aes256-sha256,3des-sha1,aes256-sha1!
+    rekey=no
+    left=%defaultroute
+    leftid=$IPADDRESS
+    leftsendcert=always
+    leftsubnet=0.0.0.0/0
+    leftcert=server.cert.pem
+    right=%any
+    rightauth=eap-mschapv2
+    rightsourceip=10.31.2.0/24
+    rightsendcert=never
+    eap_identity=%any
+    dpdaction=clear
+    fragmentation=yes
+    auto=add
+
+conn windows7
+    keyexchange=ikev2
+    ike=aes256-sha1-modp1024!
+    rekey=no
+    left=%defaultroute
+    leftauth=pubkey
+    leftsubnet=0.0.0.0/0
+    leftcert=server.cert.pem
+    right=%any
+    rightauth=eap-mschapv2
+    rightsourceip=10.31.2.0/24
+    rightsendcert=never
+    eap_identity=%any
+    auto=add
+
+EOF
+
+    cat > $CONFIGPATH/strongswan.conf <<EOF
+# /etc/strongswan.conf - strongSwan configuration file
+# strongswan.conf - strongSwan configuration file
+#
+# Refer to the strongswan.conf(5) manpage for details
+
+charon {
+    load_modular = yes
+    duplicheck.enable = no
+    compress = yes
+    plugins {
+        include strongswan.d/charon/*.conf
+    }
+    dns1 = 8.8.8.8
+    dns2 = 8.8.4.4
+    nbns1 = 8.8.8.8
+    nbns2 = 8.8.4.4
+}
+include strongswan.d/*.conf
+EOF
 
     cat > $CONFIGPATH/ipsec.secrets <<EOF
 # This file holds shared secrets or RSA private keys for authentication.
