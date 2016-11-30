@@ -6,9 +6,9 @@
 
 VPNHOST=$1
 NIC=$2
-CONFIGPATH='$CONFIGPATH/strongswan'
+CONFIGPATH='/etc/strongswan'
 
-if [ "$VPNHOST"=="" ]; then
+if [ ! -n "$VPNHOST" ]; then
   echo -e "\033[31mError: VPNHOST is blank!\033[0m"
   echo -e "\033[33mExample: ./create_cert.sh vpn.mritd.me [eth0]\033[0m"
   exit 1
