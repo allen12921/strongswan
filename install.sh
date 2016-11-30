@@ -48,7 +48,7 @@ function _install() {
                 --enable-swanctl \
                 --enable-openssl \
                 --disable-gmp \
-    && make -j 
+    && make -j \
     && make install)
 }
 
