@@ -10,7 +10,7 @@ CONFIGPATH='$CONFIGPATH/strongswan'
 
 if [ "$VPNHOST"=="" ]; then
   echo -e "\033[31mError: VPNHOST is blank!\033[0m"
-  echo -e "\033[33mExample: ./create_cert.sh vpn.mritd.me [eth0]\0330m"
+  echo -e "\033[33mExample: ./create_cert.sh vpn.mritd.me [eth0]\033[0m"
   exit 1
 fi
 
