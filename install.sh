@@ -6,7 +6,7 @@ CONFIGPATH="$INSTALLDIR/etc"
 
 if [ ! -n "$1" ] || [ ! -n "$2" ]; then
     echo -e "\033[31mError: VPNHOST is blank!\033[0m"
-    echo -e "\033[33mExample: ./$0 vpn.mritd.me eth0\033[0m"
+    echo -e "\033[33mExample: $0 vpn.mritd.me eth0\033[0m"
     exit 1
 fi
 
