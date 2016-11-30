@@ -1,7 +1,8 @@
 #!/bin/bash
 
-CONFIGPATH="/usr/local/strongswan/etc"
-
+INSTALLDIR="/usr/local/strongswan"
+CONFIGPATH="$INSTALLDIR/etc"
+PATH="$INSTALLDIR/bin:$INSTALLDIR/sbin:$PATH"
 VPNHOST=$1
 INTERFACE=$2
 
