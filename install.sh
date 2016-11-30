@@ -3,6 +3,7 @@
 VERSION="5.5.1"
 INSTALLDIR="/usr/local/strongswan"
 CONFIGPATH="$INSTALLDIR/etc"
+PATH="$INSTALLDIR/bin:$INSTALLDIR/sbin:$PATH"
 
 if [ ! -n "$1" ] || [ ! -n "$2" ]; then
     echo -e "\033[31mError: VPNHOST or INTERFACE is blank!\033[0m"
@@ -240,7 +241,7 @@ function create_cert(){
     ipsec pki --gen --outform pem > server.key.pem
     ipsec pki --pub --in server.key.pem | ipsec pki --issue --cacert ca.cert.pem \
       --cakey ca.key.pem --dn "C=CN, O=StrongSwan, CN=$VPNHOST" \
-      --san "$VPNHOST" --san="`ifconfig $NIC|sed -n 2p|awk  '{ print $2 }'|tr -d 'addr:'`" --flag serverAuth --flag ikeIntermediate \
+      --san "$VPNHOST" --san="`ifconfig $INTERFACE|sed -n 2p|awk  '{ print $2 }'|tr -d 'addr:'`" --flag serverAuth --flag ikeIntermediate \
       --outform pem > server.cert.pem
 
     # create client certificate
