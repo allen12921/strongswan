@@ -8,8 +8,10 @@ VPNHOST=$1
 NIC=$2
 CONFIGPATH='$CONFIGPATH/strongswan'
 
-if [ "$VPNHOST"!="" ]; then
-  VPN_ADDHOST_CMD="--san $VPNHOST"
+if [ "$VPNHOST"=="" ]; then
+  echo -e "\033[31mError: VPNHOST is blank!\033[0m"
+  echo -e "\033[33mExample: ./create_cert.sh vpn.mritd.me [eth0]\0330m"
+  exit 1
 fi
 
 rm -rf cert > /dev/null 2>&1
@@ -25,7 +27,7 @@ echo -e "\033[32mCreate server certificate...\033[0m"
 ipsec pki --gen --outform pem > server.key.pem
 ipsec pki --pub --in server.key.pem | ipsec pki --issue --cacert ca.cert.pem \
   --cakey ca.key.pem --dn "C=CN, O=StrongSwan, CN=$VPNHOST" \
-  $VPN_ADDHOST_CMD --san="`ifconfig $NIC|sed -n 2p|awk  '{ print $2 }'|tr -d 'addr:'`" --flag serverAuth --flag ikeIntermediate \
+  --san "$VPNHOST" --san="`ifconfig $NIC|sed -n 2p|awk  '{ print $2 }'|tr -d 'addr:'`" --flag serverAuth --flag ikeIntermediate \
   --outform pem > server.cert.pem
 
 # create client certificate
