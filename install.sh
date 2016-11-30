@@ -21,6 +21,7 @@ function install() {
     config_iptables
     config_kernel
     config_strongswan
+    create_cert
 }
 
 function _preinstall() {
