@@ -7,9 +7,9 @@ VPNHOST=$1
 INTERFACE=$2
 
 if [ ! -n $VPNHOST ]; then
-	echo -e "033\31mError: VPNHOST is blank!\033[0m"
-	echo -e "033\33m33mExample: $0 vpn.mritd.me [eth0]\033[0m"
-	exit 1
+    echo -e "033\31mError: VPNHOST is blank!\033[0m"
+    echo -e "033\33m33mExample: $0 vpn.mritd.me [eth0]\033[0m"
+    exit 1
 fi
 
 # remove old files
